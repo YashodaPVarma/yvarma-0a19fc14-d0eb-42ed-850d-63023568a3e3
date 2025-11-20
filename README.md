@@ -5,7 +5,7 @@ is ready ✨.
 
 This project contains a complete Angular + NestJS monorepo featuring
 JWT Authentication, Role-Based Access Control (ADMIN / OWNER / VIEWER),
-task creation, assignment, and secure organization-aware filtering.
+task creation, assignment, and organization-aware permission filtering.
 
 Run npx nx graph to visually explore this workspace.
 
@@ -15,173 +15,94 @@ Run npx nx graph to visually explore this workspace.
 
 This Nx workspace includes two applications and two shared libraries:
 
-    apps/
-     ├── api/          → NestJS backend (JWT, RBAC, SQLite, TypeORM)
-     └── dashboard/    → Angular frontend (Standalone Components, Tailwind)
+apps/ ├── api/ → NestJS backend (JWT, RBAC, SQLite, TypeORM) └──
+dashboard/ → Angular frontend (Standalone Components, Tailwind)
 
-    libs/
-     ├── auth/         → Shared JWT guard + interfaces
-     └── data/         → Shared DTOs, models, enums
+libs/ ├── auth/ → Shared JWT guard + interfaces └── data/ → Shared DTOs,
+models, enums
 
-Nx enables clean separation, modular code organization, and reusable
-shared libraries.
+Nx ensures scalable, modular development with reusable shared code.
 
 ------------------------------------------------------------------------
 
 👥 Seeded User Accounts (IMPORTANT)
 
-These users are preloaded into the database and required for testing
-authentication + RBAC.
+These users are preloaded in the database and required to test RBAC &
+organizations.
 
-  Role     Email             Password
-  -------- ----------------- -----------
-  Admin    admin@demo.com    admin123
-  Owner    owner@demo.com    owner123
-  Viewer   viewer@demo.com   viewer123
-
-✔ Admin = Full access
-✔ Owner = Organization-level access
-✔ Viewer = Read-only + status updates
+  Role        Email                Password
+  ----------- -------------------- -----------
+  Admin       admin@demo.com       admin123
+  IT Owner    it.owner@demo.com    owner123
+  HR Owner    hr.owner@demo.com    owner123
+  IT Viewer   it.viewer@demo.com   viewer123
+  HR Viewer   hr.viewer@demo.com   viewer123
 
 ------------------------------------------------------------------------
 
 🔐 Role Permissions
 
-🛡️ ADMIN
+ADMIN: - Full access to all organizations - Create / Update / Delete any
+task - Assign tasks to any user - View all tasks globally
 
--   Full control over all tasks
--   Create / Update / Delete tasks
--   Assign tasks to ANY user
--   View ALL organizations and users
+OWNERS (IT Owner / HR Owner): - Create new tasks - Assign tasks only
+within their own organization - Update tasks in their organization -
+Cannot delete Admin tasks
 
-👤 OWNER
-
--   Create tasks
--   Assign tasks only within their own organization
--   Update tasks in their organization
--   Cannot delete Admin tasks
-
-👁️ VIEWER
-
--   View tasks assigned to them
--   Update status only
--   Cannot create / edit / delete tasks
+VIEWERS (IT Viewer / HR Viewer): - View tasks assigned to them - Update
+status only - Cannot create / edit / delete tasks
 
 ------------------------------------------------------------------------
 
 ▶️ Run Tasks
 
-🔵 Run the Angular Dashboard
+Run the Angular Dashboard: npx nx serve dashboard Dashboard runs at:
+http://localhost:4200
 
-    npx nx serve dashboard
+Run the NestJS API: npx nx serve api API runs at:
+http://localhost:3000/api
 
-Dashboard runs at:
+Create Production Builds: Frontend: npx nx build dashboard Backend: npx
+nx build api
 
-    http://localhost:4200
-
-------------------------------------------------------------------------
-
-🟠 Run the NestJS API
-
-    npx nx serve api
-
-API runs at:
-
-    http://localhost:3000/api
-
-------------------------------------------------------------------------
-
-📦 Create Production Builds
-
-Dashboard:
-
-    npx nx build dashboard
-
-API:
-
-    npx nx build api
-
-------------------------------------------------------------------------
-
-🔍 View All Available Project Targets
-
-    npx nx show project dashboard
-    npx nx show project api
-
-More info: https://nx.dev/features/run-tasks
+View All Project Targets: npx nx show project dashboard npx nx show
+project api
 
 ------------------------------------------------------------------------
 
 🚀 Key Features
 
-🟠 Backend (NestJS)
+Backend (NestJS): - JWT Authentication - RBAC for Admin / Owners /
+Viewers - SQLite + TypeORM - Task CRUD with role restrictions -
+Organization-aware filtering - DTO validation - Auto-seeding on startup
 
--   JWT Authentication
--   RBAC for Admin / Owner / Viewer
--   SQLite + TypeORM
--   Task CRUD with role restrictions
--   Organization-aware filtering
--   DTO validation
--   Auto-seeding on startup
+Frontend (Angular 17): - Standalone components - Tailwind UI - Token
+interceptor + AuthGuard - Task list with role-based actions - Status
+update control - Clean responsive UI
 
-🔵 Frontend (Angular 17)
-
--   Standalone components
--   Tailwind CSS for UI
--   Auth Guard + HTTP Interceptor
--   Login with JWT token handling
--   Role-based UI control
--   Task table with actions
--   Status update controls
--   Clean, responsive UI
-
-📚 Shared Libraries (Nx)
-
--   libs/data → DTOs, enums, interfaces
--   libs/auth → JWT Guard + CurrentUser interface
+Shared Libraries: - libs/data → DTOs, enums, interfaces - libs/auth →
+JWT Guard & auth interfaces
 
 ------------------------------------------------------------------------
 
 ➕ Add New Projects (Nx)
 
-Generate a new Angular app:
+Generate new Angular app: npx nx g @nx/angular:app myapp
 
-    npx nx g @nx/angular:app myapp
+Generate new library: npx nx g @nx/angular:lib mylib
 
-Generate a new library:
-
-    npx nx g @nx/angular:lib mylib
-
-List plugins:
-
-    npx nx list
-
-More info: https://nx.dev/concepts/nx-plugins
-
-------------------------------------------------------------------------
-
-⚙️ Set Up CI
-
-Step 1 — Connect to Nx Cloud
-
-    npx nx connect
-
-Step 2 — Generate a CI Workflow
-
-    npx nx g ci-workflow
-
-Learn more: https://nx.dev/ci/intro/ci-with-nx
+List plugins: npx nx list
 
 ------------------------------------------------------------------------
 
 🧪 Testing
 
-    npx nx test api
-    npx nx test dashboard
+Run API tests: npx nx test api
+
+Run Dashboard tests: npx nx test dashboard
 
 ------------------------------------------------------------------------
 
 📞 Contact
 
-Yashoda Varma
-GitHub: https://github.com/YashodaPVarma
+Yashoda Varma GitHub: https://github.com/YashodaPVarma
