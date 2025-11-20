@@ -18,7 +18,9 @@ export interface CurrentUser {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  // private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'https://turbovets-api.onrender.com/api/auth';
+
 
   // Holds the current logged-in user; null when logged out
   private currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
