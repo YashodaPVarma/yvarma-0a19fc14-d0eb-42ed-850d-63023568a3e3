@@ -1,101 +1,216 @@
-# Yvarma0a19fc14D0eb42ed850d63023568a3e3
+# Secure Task Management System – Nx Monorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer">
+  <img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45">
+</a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+✨ Your full-stack **Task Management System** built with an **Nx Workspace** is ready ✨.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+This repo contains a complete **Angular + NestJS** monorepo implementing  
+**JWT Authentication**, **Role-Based Access Control (ADMIN / OWNER / VIEWER)**,  
+task creation, assignment, and secure organization-level filtering.
 
-## Run tasks
+Run `npx nx graph` to visually explore the entire workspace structure.
 
-To run the dev server for your app, use:
+---
+
+# Workspace Overview
+
+This Nx workspace contains **two applications** and **two shared libraries**:
+
+apps/
+├── api/ → NestJS backend (JWT Auth, RBAC, SQLite, TypeORM)
+└── dashboard/ → Angular frontend (Standalone Components, Tailwind)
+
+libs/
+├── auth/ → Shared authentication guard + interfaces
+└── data/ → Shared DTOs, enums, and types
+
+yaml
+Copy code
+
+Nx enables scalable, modular development with type-safe communication between frontend and backend.
+
+---
+
+# 👥 Seeded User Accounts (for Testing)
+
+| Role      | Email               | Password      |
+|-----------|----------------------|----------------|
+| **Admin**   | admin@demo.com       | admin123       |
+| **Owner**   | owner@demo.com       | owner123       |
+| **Viewer**  | viewer@demo.com      | viewer123      |
+
+---
+
+# 🔐 Role Permissions
+
+### 🛡 ADMIN
+- Full control over all tasks  
+- Create / Update / Delete  
+- Assign tasks to anyone  
+- View all tasks across all organizations  
+
+### 👤 OWNER
+- Can create tasks  
+- Can assign tasks **only inside their own organization**  
+- Can update tasks in their organization  
+- Cannot delete Admin-created tasks  
+
+### 👁 VIEWER
+- Can view tasks assigned to them  
+- Can update **status only**  
+- Cannot create / edit / delete tasks  
+
+---
+
+# ▶️ Run tasks
+
+## Run the Angular Dashboard
 
 ```sh
-npx nx serve yvarma-0a19fc14-d0eb-42ed-850d-63023568a3e3
-```
+npx nx serve dashboard
+Dashboard runs at:
 
-To create a production bundle:
+arduino
+Copy code
+http://localhost:4200
+Run the API Server (NestJS)
+sh
+Copy code
+npx nx serve api
+API available at:
 
-```sh
-npx nx build yvarma-0a19fc14-d0eb-42ed-850d-63023568a3e3
-```
+bash
+Copy code
+http://localhost:3000/api
+Create production builds
+Frontend:
 
-To see all available targets to run for a project, run:
+sh
+Copy code
+npx nx build dashboard
+Backend:
 
-```sh
-npx nx show project yvarma-0a19fc14-d0eb-42ed-850d-63023568a3e3
-```
+sh
+Copy code
+npx nx build api
+View all available project targets
+sh
+Copy code
+npx nx show project dashboard
+npx nx show project api
+These targets are inferred automatically or defined in each project.json.
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Learn more: https://nx.dev/features/run-tasks
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+🚀 Key Features
+Backend (NestJS)
+JWT Authentication
 
-## Add new projects
+RBAC for Admin / Owner / Viewer
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+SQLite + TypeORM
 
-Use the plugin's generator to create new projects.
+Task CRUD with ownership restrictions
 
-To generate a new application, use:
+Organization-aware access filtering
 
-```sh
-npx nx g @nx/angular:app demo
-```
+DTO validation everywhere
 
-To generate a new library, use:
+Auto-seeded database on startup
 
-```sh
+Frontend (Angular 17)
+Standalone components
+
+Tailwind CSS
+
+Login + token storage + interceptor
+
+Task table with role-based actions
+
+Status updates for Viewer
+
+Create / Edit modals for Admin/Owner
+
+Clean, responsive UI
+
+Shared (Nx Libraries)
+libs/data: DTOs, enums, status types
+
+libs/auth: JWT guard & current-user model
+
+➕ Add New Projects (Nx)
+Generate a new Angular app:
+
+sh
+Copy code
+npx nx g @nx/angular:app myapp
+Generate a new library:
+
+sh
+Copy code
 npx nx g @nx/angular:lib mylib
-```
+List installed plugins:
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+sh
+Copy code
+npx nx list
+More info: https://nx.dev/concepts/nx-plugins
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
+⚙️ Set up CI
+Step 1 — Connect to Nx Cloud
+sh
+Copy code
 npx nx connect
-```
+Enables:
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+Remote caching
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Distributed execution
 
-### Step 2
+Faster CI tasks
 
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
+Step 2 — Generate a CI workflow
+sh
+Copy code
 npx nx g ci-workflow
-```
+Learn more: https://nx.dev/ci/intro/ci-with-nx
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+🧪 Testing
+Run API tests:
 
-## Install Nx Console
+sh
+Copy code
+npx nx test api
+Run Dashboard tests:
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+sh
+Copy code
+npx nx test dashboard
+🔗 Useful Links
+Angular: https://angular.dev
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+NestJS: https://nestjs.com
 
-## Useful links
+Nx Documentation: https://nx.dev
 
-Learn more:
+TailwindCSS: https://tailwindcss.com
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+📞 Contact
+Yashoda Varma
+GitHub: https://github.com/YashodaPVarma
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+yaml
+Copy code
+
+---
+
+If you'd like, I can also generate:
+
+📌 Screenshot placeholders  
+📌 Architecture diagrams  
+📌 Animated badges (build, test, lint)  
+📌 Short “Recruiter Summary” at top  
+
+Just tell me!
