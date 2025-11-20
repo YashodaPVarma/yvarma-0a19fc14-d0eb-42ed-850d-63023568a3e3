@@ -1,0 +1,79 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
+  <div class="w-full max-w-md bg-slate-900/80 border border-slate-700 shadow-2xl rounded-2xl p-8 backdrop-blur">
+    
+    <!-- App title and short description -->
+    <div class="mb-6 text-center">
+      <h1 class="text-2xl font-semibold text-slate-50">
+        Secure Task Console
+      </h1>
+      <p class="mt-1 text-sm text-slate-400">
+        Sign in to manage TurboVets tasks securely.
+      </p>
+    </div>
+
+    <!-- Login form -->
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+
+      <!-- Email field -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-slate-200">
+          Email
+        </label>
+        <div class="relative">
+          <input
+            type="email"
+            formControlName="email"
+            class="w-full border border-slate-700 rounded-md px-3 py-2 text-sm bg-slate-900 text-slate-50 placeholder-slate-500
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="you@example.com"
+          />
+        </div>
+      </div>
+
+      <!-- Password field -->
+      <div>
+        <label class="block text-sm font-medium mb-1 text-slate-200">
+          Password
+        </label>
+        <div class="relative">
+          <input
+            type="password"
+            formControlName="password"
+            class="w-full border border-slate-700 rounded-md px-3 py-2 text-sm bg-slate-900 text-slate-50 placeholder-slate-500
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="••••••••"
+          />
+        </div>
+      </div>
+
+      <!-- Login button -->
+      <button
+        type="submit"
+        [disabled]="loading || form.invalid"
+        class="w-full py-2.5 rounded-md text-sm font-medium
+               bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed
+               text-white transition-colors"
+      >
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+
+      <!-- Error message -->
+      <p *ngIf="error" class="text-sm text-rose-400 mt-1 text-center">
+        {{ error }}
+      </p>
+    </form>
+
+    <!-- Demo credentials for testers -->
+    <div class="mt-5 text-[11px] text-slate-400 text-center leading-relaxed">
+      <div class="mb-1 uppercase tracking-wide text-slate-500">
+        Demo users
+      </div>
+      <div>
+        <span class="font-mono">admin@demo.com / admin123</span> •
+        <span class="font-mono">manager@demo.com / manager123</span> •
+        <span class="font-mono">staff@demo.com / staff123</span>
+      </div>
+    </div>
+
+  </div>
+</div>
