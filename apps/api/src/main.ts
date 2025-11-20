@@ -19,10 +19,19 @@ async function bootstrap() {
   const globalPrefix = 'api';
 
   /** Allow frontend running on localhost:4200 to call this API. */
+  // app.enableCors({
+  //   origin: 'http://localhost:4200',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  //   allowedHeaders: 'Content-Type, Authorization',
+  // });
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: [
+      'http://localhost:4200', // local Angular dev
+      'https://yashodapvarma.github.io', // GitHub Pages live site
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
+    credentials: true,
   });
 
   app.setGlobalPrefix(globalPrefix);
