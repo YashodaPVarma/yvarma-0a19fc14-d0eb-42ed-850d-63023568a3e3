@@ -25,13 +25,14 @@ async function bootstrap() {
   //   allowedHeaders: 'Content-Type, Authorization',
   // });
   app.enableCors({
-    origin: [
-      'http://localhost:4200', // local Angular dev
-      'https://yashodapvarma.github.io', // GitHub Pages live site
-    ],
+    // origin: [
+    //   'http://localhost:4200', // local Angular dev
+    //   'https://yashodapvarma.github.io', // GitHub Pages live site
+    // ],
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
-    credentials: true,
+    // allowedHeaders: 'Content-Type, Authorization',
+    // credentials: true,
   });
 
   app.setGlobalPrefix(globalPrefix);
