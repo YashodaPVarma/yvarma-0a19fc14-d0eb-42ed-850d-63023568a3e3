@@ -170,70 +170,90 @@ export class TasksService {
   }
 
   /** Update task fields with role and org access control. */
-  async updateTask(currentUser: CurrentUser, id: number, dto: UpdateTaskDto) {
-    const task = await this.tasksRepo.findOne({
-      where: { id },
-      relations: ['organization', 'assignee'],
-    });
+async updateTask(currentUser: CurrentUser, id: number, dto: UpdateTaskDto) {
+  const task = await this.tasksRepo.findOne({
+    where: { id },
+    relations: ['organization', 'assignee'],
+  });
 
-    if (!task) {
-      throw new NotFoundException('Task not found');
-    }
-
-    // Owner must match org; admin bypasses
-    if (!this.isAdmin(currentUser)) {
-      if (
-        !this.isOwner(currentUser) ||
-        task.organization.id !== currentUser.orgId
-      ) {
-        throw new ForbiddenException('You cannot update this task');
-      }
-    }
-
-    if (dto.title !== undefined) task.title = dto.title;
-    if (dto.description !== undefined) task.description = dto.description;
-    if (dto.category !== undefined) task.category = dto.category;
-    if (dto.status !== undefined) task.status = dto.status;
-
-    if (dto.assigneeId !== undefined) {
-      if (dto.assigneeId === (null as any)) {
-        task.assignee = null;
-      } else {
-        const assignee = await this.usersRepo.findOne({
-          where: { id: dto.assigneeId },
-          relations: ['organization'],
-        });
-
-        if (!assignee) {
-          throw new NotFoundException('Assignee not found');
-        }
-
-        if (
-          !this.isAdmin(currentUser) &&
-          assignee.organization.id !== currentUser.orgId
-        ) {
-          throw new ForbiddenException(
-            'Cannot assign tasks outside your organization'
-          );
-        }
-
-        task.assignee = assignee;
-      }
-    }
-
-    const saved = await this.tasksRepo.save(task);
-
-    this.auditLog.log({
-      timestamp: new Date().toISOString(),
-      actorEmail: currentUser.email,
-      actorRole: currentUser.role as string,
-      actorOrgId: currentUser.orgId,
-      action: 'UPDATE_TASK',
-      details: { taskId: saved.id },
-    });
-
-    return saved;
+  if (!task) {
+    throw new NotFoundException('Task not found');
   }
+
+  // 🔐 RBAC: who is allowed to update this task?
+  if (!this.isAdmin(currentUser)) {
+    // VIEWER: never allowed to update
+    if (this.isViewer(currentUser)) {
+      throw new ForbiddenException('VIEWER cannot update tasks');
+    }
+
+    // OWNER: allowed if task is in their org OR currently assigned to them
+    if (this.isOwner(currentUser)) {
+      const isSameOrg =
+        task.organization && task.organization.id === currentUser.orgId;
+      const isAssignedToOwner =
+        task.assignee && task.assignee.id === currentUser.userId;
+
+      if (!isSameOrg && !isAssignedToOwner) {
+        throw new ForbiddenException(
+          'Owners can only update tasks in their organization or tasks assigned to them'
+        );
+      }
+    } else {
+      // any other non-admin role (safety net)
+      throw new ForbiddenException('You cannot update this task');
+    }
+  }
+
+  // ✅ At this point, user is allowed to update the task
+
+  if (dto.title !== undefined) task.title = dto.title;
+  if (dto.description !== undefined) task.description = dto.description;
+  if (dto.category !== undefined) task.category = dto.category;
+  if (dto.status !== undefined) task.status = dto.status;
+
+  // 🔁 Assignee change logic (still enforces "within org" for non-admins)
+  if (dto.assigneeId !== undefined) {
+    if (dto.assigneeId === (null as any)) {
+      task.assignee = null;
+    } else {
+      const assignee = await this.usersRepo.findOne({
+        where: { id: dto.assigneeId },
+        relations: ['organization'],
+      });
+
+      if (!assignee) {
+        throw new NotFoundException('Assignee not found');
+      }
+
+      // Non-admin cannot assign outside org (OWNER included)
+      if (
+        !this.isAdmin(currentUser) &&
+        assignee.organization.id !== currentUser.orgId
+      ) {
+        throw new ForbiddenException(
+          'Cannot assign tasks outside your organization'
+        );
+      }
+
+      task.assignee = assignee;
+    }
+  }
+
+  const saved = await this.tasksRepo.save(task);
+
+  this.auditLog.log({
+    timestamp: new Date().toISOString(),
+    actorEmail: currentUser.email,
+    actorRole: currentUser.role as string,
+    actorOrgId: currentUser.orgId,
+    action: 'UPDATE_TASK',
+    details: { taskId: saved.id },
+  });
+
+  return saved;
+}
+
 
   /** Delete a task with proper role and org restrictions. */
   async deleteTask(currentUser: CurrentUser, id: number) {
