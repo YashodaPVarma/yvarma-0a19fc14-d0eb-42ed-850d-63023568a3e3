@@ -92,7 +92,8 @@ export class TasksComponent implements OnInit {
     done: 0,
   };
 
-  private apiUrl = 'http://localhost:3000/api';
+  // private apiUrl = 'http://localhost:3000/api';
+private apiUrl = 'https://turbovets-api.onrender.com/api';
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
